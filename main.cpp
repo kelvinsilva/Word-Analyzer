@@ -139,6 +139,7 @@ BOOL CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
         case WM_CLOSE:
             EndDialog(hwnd, 0);
+
             return TRUE;
 
         case WM_COMMAND:
@@ -154,9 +155,6 @@ BOOL CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                  }break;
 
                 case IDC_BRWS:{
-
-
-
 
                     char szFileName[MAX_PATH] = "";
 
@@ -194,10 +192,11 @@ BOOL CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                                 GetDlgItemText(hwnd, IDC_BOXEDIT, content, len+1);
 
                                 contents.append(content);
+                                delete[] content;
 
 
                         }else if (BST_CHECKED == IsDlgButtonChecked(hwnd, IDC_FILE)){
-
+                                contents = "";
                                 threadParams->textOrbox = true;
 
                         }else{
@@ -211,6 +210,7 @@ BOOL CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                                 GetDlgItemText(hwnd, IDC_BOXEDIT, content, len+1);
 
                                 contents.append(content);
+                                delete[] content;
                         }
 
 
@@ -227,7 +227,7 @@ BOOL CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                         MessageBox(NULL, "Please Wait for processing to complete!\r\n Press OK.", "Notification!", MB_ICONASTERISK);
                         //Wait for the worker thread to finish!
                         WaitForSingleObject(hWorker,INFINITE);
-
+                        MessageBox(NULL, "Processing Completed!", "Notification!", MB_ICONASTERISK);
 
 
                         //Setup a stringstream to format our text for each edit control.
@@ -276,7 +276,8 @@ BOOL CALLBACK DialogProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
                         SetDlgItemText(hwnd, IDC_FORMAL, BOXBUFFER.str().c_str());
 
-
+                        delete []fPath;
+                        delete threadParams;
                 }
 
                     return TRUE;
@@ -402,7 +403,8 @@ unsigned int __stdcall process_text(void* args){
       //std::cout << "Female Formal: " << VERDICT.FemaleFormal << "\nFemaleInformal: " << VERDICT.FemaleInformal << "\nMALE formal: " << VERDICT.MaleFormal << "\nMale Informal: " << VERDICT.MaleInformal << "\nPercentFormal: " << VERDICT.percentFORMAL << "\nPercentInformal: " << VERDICT.percentINFORMAL;
       //std::cout << contents.max_size();
       //std::cout << contents;
-         MessageBox(NULL, "Processing Completed!", "Notification!", MB_ICONASTERISK);
+
+
       return 0;
 
 }
